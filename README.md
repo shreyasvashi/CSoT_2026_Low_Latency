@@ -47,11 +47,6 @@ python3 data/gen.py --rows 10000 --out data/synthetic_small.csv
                     --benchmark_out=results.json \
                     --benchmark_out_format=json
 ```
-
-## Submission
-
-Push to main. The Actions tab builds a Linux x86-64 `spec_strategy.so`. Download it from Artifacts and upload to the CSoT portal.
-
 ## Strategy
 
 Rolling 64-tick z-score mean reversion per symbol. Entry at `|z| >= 2.0`, exit at `|z| <= 0.5`, max position 1 unit per symbol. Full algorithm in `STRATEGY_SPEC.md`.
