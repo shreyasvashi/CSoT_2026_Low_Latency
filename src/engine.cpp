@@ -79,6 +79,8 @@ void Engine::load_strategy(const char* so_path) {
     strategy_ = reinterpret_cast<CreateFn>(reinterpret_cast<std::uintptr_t>(sym))();
     if (!strategy_)
         throw std::runtime_error("create_strategy() returned nullptr");
+
+    reclaim_iface_ = dynamic_cast<IReclaimable*>(strategy_);
 }
 
 uint8_t Engine::intern_symbol(const char* begin, std::size_t len) {
@@ -162,6 +164,8 @@ void Engine::run() {
     const std::size_t n = ticks_.size();
     uint64_t total_orders = 0;
 
+    std::vector<Order> orders;
+
     for (std::size_t i = 0; i < n; ++i) {
         const TickRecord& r = ticks_[i];
 
@@ -174,16 +178,18 @@ void Engine::run() {
         t.ask_qty      = r.ask_qty;
 
         const auto t0 = std::chrono::steady_clock::now();
-        auto orders   = strategy_->on_tick(t);
+        orders        = strategy_->on_tick(t);
         const auto t1 = std::chrono::steady_clock::now();
 
-        const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                            t1 - t0).count();
-        hist_.record(static_cast<uint64_t>(ns));
+        hist_.record(static_cast<uint64_t>(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count()));
 
         total_orders += orders.size();
         for (const Order& o : orders)
             strategy_->on_fill(o, o.price, o.qty);
+
+        if (reclaim_iface_)
+            reclaim_iface_->reclaim_orders(std::move(orders));
     }
 
     std::cout << "ticks="  << n

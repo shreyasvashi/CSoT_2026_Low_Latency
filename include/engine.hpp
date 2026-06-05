@@ -6,6 +6,7 @@
 
 #include "strategy.hpp"
 #include "histogram.hpp"
+#include "reclaimable.hpp"
 
 namespace csot {
 
@@ -42,8 +43,9 @@ private:
     void    load_csv(const char* csv_path);
     uint8_t intern_symbol(const char* p, std::size_t len);
 
-    void*     dl_handle_ = nullptr;
-    Strategy* strategy_  = nullptr;
+    void*         dl_handle_      = nullptr;
+    Strategy*     strategy_       = nullptr;
+    IReclaimable* reclaim_iface_  = nullptr;
 
     std::vector<TickRecord> ticks_;
 

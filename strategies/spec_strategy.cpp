@@ -1,9 +1,9 @@
 #include "strategy.hpp"
+#include "reclaimable.hpp"
 
 #include <array>
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <exception>
 
@@ -28,11 +28,19 @@ struct alignas(64) SymbolState {
 static_assert(sizeof(SymbolState) % 64 == 0,
               "SymbolState must be a multiple of cache-line size");
 
-class SpecStrategy final : public csot::Strategy {
+class SpecStrategy final : public csot::Strategy,
+                           public csot::IReclaimable {
 public:
     void on_init() override {
         sym_count_ = 0;
         std::memset(states_.data(), 0, sizeof(SymbolState) * states_.size());
+        result_.reserve(1);
+    }
+
+    void reclaim_orders(std::vector<csot::Order>&& v) noexcept override {
+        v.clear();
+        if (v.capacity() >= 1)
+            result_ = std::move(v);
     }
 
     std::vector<csot::Order> on_tick(const csot::Tick& t) override {
@@ -69,20 +77,32 @@ public:
         using S = csot::Order::Side;
 
         if (st.position == 0) {
-            if (z >= ENTRY_Z)
-                return {csot::Order{S::SELL, t.symbol, t.bid_px, ORDER_QTY}};
-            if (z <= -ENTRY_Z)
-                return {csot::Order{S::BUY, t.symbol, t.ask_px, ORDER_QTY}};
+            if (z >= ENTRY_Z) {
+                result_.clear();
+                result_.emplace_back(S::SELL, t.symbol, t.bid_px, ORDER_QTY);
+                return std::move(result_);
+            }
+            if (z <= -ENTRY_Z) {
+                result_.clear();
+                result_.emplace_back(S::BUY, t.symbol, t.ask_px, ORDER_QTY);
+                return std::move(result_);
+            }
             return {};
         }
 
-        if (st.position > 0 && abs_z <= EXIT_Z)
-            return {csot::Order{S::SELL, t.symbol, t.bid_px,
-                                static_cast<uint32_t>(st.position)}};
+        if (st.position > 0 && abs_z <= EXIT_Z) {
+            result_.clear();
+            result_.emplace_back(S::SELL, t.symbol, t.bid_px,
+                                 static_cast<uint32_t>(st.position));
+            return std::move(result_);
+        }
 
-        if (st.position < 0 && abs_z <= EXIT_Z)
-            return {csot::Order{S::BUY, t.symbol, t.ask_px,
-                                static_cast<uint32_t>(-st.position)}};
+        if (st.position < 0 && abs_z <= EXIT_Z) {
+            result_.clear();
+            result_.emplace_back(S::BUY, t.symbol, t.ask_px,
+                                 static_cast<uint32_t>(-st.position));
+            return std::move(result_);
+        }
 
         return {};
     }
@@ -121,7 +141,8 @@ private:
     }
 
     alignas(64) std::array<SymbolState, 64> states_;
-    std::size_t sym_count_ = 0;
+    std::size_t              sym_count_ = 0;
+    std::vector<csot::Order> result_;
 };
 
 } // anonymous namespace
