@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o spec_strategy.dylib -install_name @rpath/spec_strategy.dylib CMakeFiles/spec_strategy.dir/strategies/spec_strategy.cpp.o

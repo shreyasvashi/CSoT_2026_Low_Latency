@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/build",
+  "command": "/usr/bin/c++  -I/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/include -O3 -DNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -O2 -fno-omit-frame-pointer -o CMakeFiles/engine.dir/src/engine.cpp.o -c /Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/src/engine.cpp",
+  "file": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/src/engine.cpp",
+  "output": "CMakeFiles/engine.dir/src/engine.cpp.o"
+},
+{
+  "directory": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/build",
+  "command": "/usr/bin/c++  -I/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/include -O3 -DNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -O2 -fno-omit-frame-pointer -o CMakeFiles/quant_runner.dir/src/main.cpp.o -c /Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/src/main.cpp",
+  "file": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/src/main.cpp",
+  "output": "CMakeFiles/quant_runner.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/build",
+  "command": "/usr/bin/c++ -Dspec_strategy_EXPORTS -I/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/include -O3 -DNDEBUG -std=c++20 -arch arm64 -fPIC -Wall -Wextra -Wpedantic -O2 -fno-omit-frame-pointer -o CMakeFiles/spec_strategy.dir/strategies/spec_strategy.cpp.o -c /Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/strategies/spec_strategy.cpp",
+  "file": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/strategies/spec_strategy.cpp",
+  "output": "CMakeFiles/spec_strategy.dir/strategies/spec_strategy.cpp.o"
+},
+{
+  "directory": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/build",
+  "command": "/usr/bin/c++ -DBENCHMARK_STATIC_DEFINE -I/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/include -isystem /opt/homebrew/include -O3 -DNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -O2 -fno-omit-frame-pointer -o CMakeFiles/quant_bench.dir/bench/bench.cpp.o -c /Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/bench/bench.cpp",
+  "file": "/Users/shreyasvasista/CPP/Projects/CSoT_2026_Low_Latency/bench/bench.cpp",
+  "output": "CMakeFiles/quant_bench.dir/bench/bench.cpp.o"
+}
+]
