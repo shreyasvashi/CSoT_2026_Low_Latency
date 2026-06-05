@@ -1,0 +1,36 @@
+name: build-submission
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libbenchmark-dev
+
+      - name: Build spec_strategy.so
+        run: |
+          cmake -B build-submit \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O2 -march=x86-64-v2 -fno-omit-frame-pointer" \
+            -DENABLE_LTO=OFF
+          cmake --build build-submit -j --target spec_strategy
+
+      - name: Upload artifact
+
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec_strategy
+          path: build-submit/spec_strategy.so
+
+
+
+
+
